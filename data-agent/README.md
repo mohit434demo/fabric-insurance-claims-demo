@@ -1,103 +1,74 @@
-# InsuranceAgent — Fabric data agent setup
+# InsuranceAgent — setup
 
-The data agent sits on **three sources over the same data** and routes between them
-by capability. That routing is the whole point of the demo: each source can do
-something the others can't.
-
-| Source | Type | Good at | Can't do |
-|---|---|---|---|
-| `InsuranceSM` | Semantic model (DAX) | Metrics, aggregations, rankings, trends | Fields not in the model |
-| `RF_Lakehouse` | Lakehouse SQL endpoint (T-SQL) | CTEs, window functions, data-quality checks, row-level lists | — |
-| `InsuranceOntology_ManualGen` | Ontology (graph) | Multi-hop traversal on specific records | Aggregation |
+The configuration is the interesting part of this repo. Once the agent is running,
+see [`exploring.md`](exploring.md).
 
 ## Prerequisites
 
-Build these first, in order:
+The agent needs its three sources to exist first:
 
-1. `notebooks/01_create_lakehouse_data.ipynb` → `RF_Lakehouse` with 8 tables
-2. `notebooks/02_create_ontology.ipynb` → `InsuranceOntology_ManualGen`
-3. `semantic-model/` → `InsuranceSM`
+1. `RF_Lakehouse` with 8 tables — [notebook 01](../notebooks/01_create_lakehouse_data.ipynb)
+2. `InsuranceOntology_ManualGen` — [notebook 02](../notebooks/02_create_ontology.ipynb)
+3. `InsuranceSM` semantic model — [`semantic-model/`](../semantic-model/)
 
-## Setup
-
-### 1. Create the agent
+## 1. Create the agent
 
 Workspace → **New item** → **Data agent**. Name it `InsuranceAgent`.
 
-### 2. Add agent instructions
+## 2. Paste the agent instructions
 
-Paste [`agent-instructions.md`](agent-instructions.md) into the agent's
-**AI instructions** box.
+[`agent-instructions.md`](agent-instructions.md) → the agent's **AI instructions** box.
 
-This is the routing brain. It tells the agent which source to reach for, how to
-fall back, and the domain rules that stop it from producing confidently wrong
-numbers — `approved_amount` NULL handling, the "no closed status" rule, and the
-loss-ratio definition.
+This is the routing brain. It decides which source handles what, how to fall back when
+one fails, and the domain rules that stop confidently-wrong answers — NULL handling on
+`approved_amount`, the "there is no closed status" rule, and the loss-ratio definition.
 
-### 3. Add the three data sources
+## 3. Add the three sources
 
-Add each source, then paste in its configuration from
-[`data-sources/`](data-sources/):
+Add each source in the portal, then paste in its configuration:
+
+| Source | Add as | Files |
+|---|---|---|
+| `RF_Lakehouse` | Lakehouse | [`1-lakehouse-RF_Lakehouse/`](data-sources/1-lakehouse-RF_Lakehouse/) — description, instructions, schema descriptions, topics, example queries |
+| `InsuranceSM` | Semantic model | [`2-semantic-model-InsuranceSM/instructions.md`](data-sources/2-semantic-model-InsuranceSM/instructions.md) |
+| `InsuranceOntology_ManualGen` | Ontology | [`3-ontology-InsuranceOntology_ManualGen/instructions.md`](data-sources/3-ontology-InsuranceOntology_ManualGen/instructions.md) |
+
+Select **all 8 tables** on the lakehouse and **all 8 entity types** on the ontology.
+
+For the lakehouse, each file maps to a field in the portal:
 
 ```
-data-sources/
-├── 1-lakehouse-RF_Lakehouse/
-│   ├── description.md          -> data source Description
-│   ├── instructions.md         -> data source Instructions
-│   ├── schema-descriptions.md  -> per-table/column descriptions
-│   ├── topics.md               -> Topics (6 topics, each with instructions)
-│   └── example-queries.json    -> Example queries (15 few-shot SQL pairs)
-├── 2-semantic-model-InsuranceSM/
-│   └── instructions.md         -> data source Instructions
-└── 3-ontology-InsuranceOntology_ManualGen/
-    └── instructions.md         -> data source Instructions
+description.md          -> Data source description
+instructions.md         -> Data source instructions
+schema-descriptions.md  -> per-table / per-column descriptions
+topics.md               -> Topics (6, each with its own instructions)
+example-queries.json    -> Example queries (15 few-shot pairs)
 ```
 
-Select all 8 tables on the lakehouse and all 8 entity types on the ontology.
+## 4. Publish and test
 
-### 4. Publish
+Publish, then run the questions in [`exploring.md`](exploring.md). Confirm each one
+routes to the source you expect before showing anyone.
 
-Publish the agent. Test with the questions below before demoing.
+---
 
-## Why the few-shots matter
+## Why the example queries matter
 
-`example-queries.json` holds 15 question/SQL pairs. They are the single highest-leverage
-part of this configuration — they teach the agent the join paths and the traps:
+`example-queries.json` holds 15 question/SQL pairs and is the highest-leverage part of
+this configuration. They teach join paths and traps that prose instructions don't
+reliably convey:
 
 - Aggregate `claim_events` in a CTE **before** joining to `claims`, or counts inflate
 - `NULLIF` in every denominator
 - `claims.adjuster_id` (assigned) vs `claim_events.adjuster_id` (performed the work)
 - `SUM(approved_amount)` silently drops unpaid claims
 
-Without these the agent will fan out rows on joins and quietly report inflated totals.
+[`exploring.md`](exploring.md) has an experiment for removing them and watching the
+answers degrade. It's the clearest demonstration of what configuration buys you.
 
-## Demo questions
-
-Each maps to an edge case deliberately planted by notebook 01, so all return real results.
-
-**Routes to the semantic model:**
-- What are total estimated loss, approved payout, and loss ratio by claim type?
-- What's the monthly trend in claims filed in Q1 2026?
-- Which offices have the highest approved payouts?
-
-**Routes to the lakehouse (needs SQL the model can't express):**
-- Which claims have estimated losses greater than their policy coverage amount?
-- Which adjusters are closest to or over their maximum active-claim capacity?
-- Which insured assets have no recorded last inspection date?
-
-**Routes to the ontology (single-record traversal):**
-- Which adjuster handled claim CN500042, and what policy covers the asset involved?
-- What events occurred on claim CN500107?
-
-**Good stress test:**
-- How many claims are closed?
-
-There is no `closed` status. A correctly configured agent says so and offers
-paid/denied instead of inventing a number.
-
-## Note on the instructions
+## Note on the "Confidential" line
 
 `agent-instructions.md` ends with *"Data is Confidential — summarize, don't dump."*
-That line is deliberate: it shapes response behaviour. The data in this repo is
-entirely synthetic, so nothing here is actually confidential. Keep or drop the line
-depending on whether you want that behaviour in your own deployment.
+That's deliberate — it shapes response behaviour and keeps the agent from dumping raw
+rows. The data here is entirely synthetic, so nothing is actually confidential. Keep
+the line if you want that behaviour, drop it if it confuses the conversation.
