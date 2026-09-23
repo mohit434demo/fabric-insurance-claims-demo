@@ -1,0 +1,84 @@
+table policies
+	lineageTag: 73e55362-3d29-4a67-8a30-02c8f56e979c
+
+	column policy_id
+		dataType: string
+		lineageTag: 0c606f01-3377-43c0-900d-5a65233a8408
+		summarizeBy: none
+		sourceColumn: policy_id
+
+	column policy_number
+		dataType: string
+		lineageTag: 5460b640-d9ab-4103-a9e4-b9675d03d05e
+		summarizeBy: none
+		sourceColumn: policy_number
+
+	column policyholder_id
+		dataType: string
+		lineageTag: e484a181-e489-4c98-bf83-973ffa0e7e64
+		summarizeBy: none
+		sourceColumn: policyholder_id
+
+	column asset_id
+		dataType: string
+		lineageTag: 8547f717-4ade-4cd7-a96d-2957412e42e6
+		summarizeBy: none
+		sourceColumn: asset_id
+
+	column policy_type
+		dataType: string
+		lineageTag: bd385717-ed22-4cf2-b561-d7a9b43cefcc
+		summarizeBy: none
+		sourceColumn: policy_type
+
+	column coverage_amount
+		dataType: double
+		lineageTag: 87f1977e-d5e5-49df-b752-efc1a39a26b4
+		summarizeBy: sum
+		sourceColumn: coverage_amount
+
+	column deductible
+		dataType: double
+		lineageTag: cf23029e-04fe-4989-9191-fe3bc9d9a411
+		summarizeBy: sum
+		sourceColumn: deductible
+
+	column premium_annual
+		dataType: double
+		lineageTag: e200e31f-e600-4f50-9761-dd50a1d7f26b
+		summarizeBy: sum
+		sourceColumn: premium_annual
+
+	column effective_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: cc99333b-0547-43bf-b1bc-308ff8a284c1
+		summarizeBy: none
+		sourceColumn: effective_date
+
+	column expiration_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 0d55d474-2c15-442b-b941-792be0a009e4
+		summarizeBy: none
+		sourceColumn: expiration_date
+
+	column status
+		dataType: string
+		lineageTag: 8f62d5dc-5f24-4985-9b52-8e142ea42aaf
+		summarizeBy: none
+		sourceColumn: status
+
+	column underwriter
+		dataType: string
+		lineageTag: ba70a4c4-23a0-454c-8b58-a5280cfce20b
+		summarizeBy: none
+		sourceColumn: underwriter
+
+	partition policies = entity
+		mode: directLake
+		source
+			entityName: policies
+			schemaName: dbo
+			expressionSource: DatabaseQuery
+

@@ -1,0 +1,95 @@
+table insured_assets
+	lineageTag: 8b3bd76d-8106-4bfe-880a-fbc011d80a6a
+
+	column asset_id
+		dataType: string
+		lineageTag: 752ed8fd-bcb7-4db5-9914-15ca5fe4de5a
+		summarizeBy: none
+		sourceColumn: asset_id
+
+	column asset_number
+		dataType: string
+		lineageTag: 2d5640dd-c597-4285-a2a1-ff8b4bdb2e5d
+		summarizeBy: none
+		sourceColumn: asset_number
+
+	column asset_type
+		dataType: string
+		lineageTag: 61f9799e-a952-4a58-a4e7-5bcfa38bc2fe
+		summarizeBy: none
+		sourceColumn: asset_type
+
+	column asset_description
+		dataType: string
+		lineageTag: 3ddfc625-2869-4604-9873-7491c66fc5b0
+		summarizeBy: none
+		sourceColumn: asset_description
+
+	column make
+		dataType: string
+		lineageTag: 63dd804d-0b81-425e-9eac-5f576f66e944
+		summarizeBy: none
+		sourceColumn: make
+
+	column model
+		dataType: string
+		lineageTag: 61333253-4bc1-4d44-b6ed-7ec5fbf9d572
+		summarizeBy: none
+		sourceColumn: model
+
+	column year
+		dataType: int64
+		lineageTag: f64f4a39-4efe-4e99-bc9b-dea794adf6c4
+		summarizeBy: sum
+		sourceColumn: year
+
+	column vin
+		dataType: string
+		lineageTag: c66ec89f-1e87-430e-976e-0bacb630f995
+		summarizeBy: none
+		sourceColumn: vin
+
+	column address
+		dataType: string
+		lineageTag: 4dd691b3-6923-45a3-9fa3-c739a3f9a6d1
+		summarizeBy: none
+		sourceColumn: address
+
+	column city
+		dataType: string
+		lineageTag: 0fa9924c-e500-4403-84a7-cb3d2368203e
+		summarizeBy: none
+		sourceColumn: city
+
+	column state
+		dataType: string
+		lineageTag: 7e1879ea-e675-421a-be66-30de2e24ddb4
+		summarizeBy: none
+		sourceColumn: state
+
+	column estimated_value
+		dataType: double
+		lineageTag: 01efc275-dc1e-456b-a760-04d9f7f6850a
+		summarizeBy: sum
+		sourceColumn: estimated_value
+
+	column condition
+		dataType: string
+		lineageTag: 1a49d522-4bab-4474-8822-93eb5e9e27c3
+		summarizeBy: none
+		sourceColumn: condition
+
+	column last_inspection_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 9d606f71-80fe-4d11-8773-8bf428911ea7
+		summarizeBy: none
+		sourceColumn: last_inspection_date
+
+	partition insured_assets = entity
+		mode: directLake
+		source
+			entityName: insured_assets
+			schemaName: dbo
+			expressionSource: DatabaseQuery
+

@@ -1,0 +1,77 @@
+[
+  {
+    "question": "How many claims are in each status?",
+    "query": "SELECT c.status AS claim_status, COUNT(*) AS claim_count\nFROM claims AS c\nGROUP BY c.status\nORDER BY claim_count DESC, claim_status;",
+    "id": "claims-by-status"
+  },
+  {
+    "question": "Show the 10 most recently filed claims with the claim number, policyholder, adjuster, office, type, status, and estimated loss.",
+    "query": "SELECT TOP (10)\n c.claim_number,\n ph.full_name AS policyholder_name,\n CONCAT(a.first_name, ' ', a.last_name) AS adjuster_name,\n o.name AS office_name,\n c.claim_type,\n c.status AS claim_status,\n c.estimated_loss,\n c.filed_date\nFROM claims AS c\nLEFT JOIN policyholders AS ph ON c.policyholder_id = ph.policyholder_id\nLEFT JOIN adjusters AS a ON c.adjuster_id = a.adjuster_id\nLEFT JOIN offices AS o ON c.office_id = o.office_id\nORDER BY c.filed_date DESC;",
+    "id": "recent-claim-details"
+  },
+  {
+    "question": "Which adjusters have the most open claims?",
+    "query": "SELECT\n CONCAT(a.first_name, ' ', a.last_name) AS adjuster_name,\n o.name AS home_office_name,\n COUNT(*) AS open_claim_count\nFROM claims AS c\nINNER JOIN adjusters AS a ON c.adjuster_id = a.adjuster_id\nLEFT JOIN offices AS o ON a.home_office_id = o.office_id\nWHERE c.status NOT IN ('paid', 'denied')\nGROUP BY a.first_name, a.last_name, o.name\nORDER BY open_claim_count DESC, adjuster_name;",
+    "id": "open-claims-by-adjuster"
+  },
+  {
+    "question": "What are total estimated loss, approved payout, and loss ratio by claim type?",
+    "query": "SELECT\n c.claim_type,\n SUM(c.estimated_loss) AS total_estimated_loss,\n SUM(c.approved_amount) AS total_approved_payout,\n CAST(SUM(c.approved_amount) / NULLIF(SUM(c.estimated_loss), 0) AS decimal(10,4)) AS loss_ratio\nFROM claims AS c\nGROUP BY c.claim_type\nORDER BY total_estimated_loss DESC;",
+    "id": "loss-ratio-by-claim-type"
+  },
+  {
+    "question": "Which offices have the highest approved payout amounts?",
+    "query": "SELECT\n o.name AS office_name,\n COUNT(*) AS claim_count,\n SUM(c.approved_amount) AS total_approved_payout\nFROM claims AS c\nINNER JOIN offices AS o ON c.office_id = o.office_id\nGROUP BY o.name\nHAVING SUM(c.approved_amount) IS NOT NULL\nORDER BY total_approved_payout DESC, office_name;",
+    "id": "approved-payout-by-office"
+  },
+  {
+    "question": "What is the monthly trend in claims filed during the first quarter of 2026?",
+    "query": "SELECT\n YEAR(c.filed_date) AS filed_year,\n MONTH(c.filed_date) AS filed_month,\n COUNT(*) AS claims_filed,\n SUM(c.estimated_loss) AS total_estimated_loss\nFROM claims AS c\nWHERE c.filed_date >= '2026-01-01'\n AND c.filed_date < '2026-04-01'\nGROUP BY YEAR(c.filed_date), MONTH(c.filed_date)\nORDER BY filed_year, filed_month;",
+    "id": "monthly-filed-claims-q1-2026"
+  },
+  {
+    "question": "Which claims have not received an approved payout amount yet?",
+    "query": "SELECT\n c.claim_number,\n ph.full_name AS policyholder_name,\n c.claim_type,\n c.status AS claim_status,\n c.estimated_loss,\n c.filed_date\nFROM claims AS c\nLEFT JOIN policyholders AS ph ON c.policyholder_id = ph.policyholder_id\nWHERE c.approved_amount IS NULL\nORDER BY c.estimated_loss DESC, c.filed_date DESC;",
+    "id": "claims-without-approved-payout"
+  },
+  {
+    "question": "Which claims have estimated losses greater than their policy coverage amount?",
+    "query": "SELECT\n c.claim_number,\n ph.full_name AS policyholder_name,\n p.policy_number,\n c.estimated_loss,\n p.coverage_amount,\n c.estimated_loss - p.coverage_amount AS estimated_loss_over_coverage\nFROM claims AS c\nINNER JOIN policies AS p ON c.policy_id = p.policy_id\nLEFT JOIN policyholders AS ph ON c.policyholder_id = ph.policyholder_id\nWHERE c.estimated_loss > p.coverage_amount\nORDER BY estimated_loss_over_coverage DESC;",
+    "id": "claims-exceeding-policy-coverage"
+  },
+  {
+    "question": "Which insured assets have no recorded last inspection date?",
+    "query": "SELECT\n ia.asset_number,\n ia.asset_type,\n ia.make,\n ia.model,\n ia.[year],\n ia.city,\n ia.state,\n ia.estimated_value\nFROM insured_assets AS ia\nWHERE ia.last_inspection_date IS NULL\nORDER BY ia.estimated_value DESC;",
+    "id": "assets-without-last-inspection-date"
+  },
+  {
+    "question": "Show the policies that expire soonest, along with the policyholder and insured asset.",
+    "query": "SELECT TOP (10)\n p.policy_number,\n ph.full_name AS policyholder_name,\n ia.asset_number,\n ia.asset_type,\n p.policy_type,\n p.coverage_amount,\n p.expiration_date,\n p.status AS policy_status\nFROM policies AS p\nLEFT JOIN policyholders AS ph ON p.policyholder_id = ph.policyholder_id\nLEFT JOIN insured_assets AS ia ON p.asset_id = ia.asset_id\nWHERE p.expiration_date IS NOT NULL\nORDER BY p.expiration_date ASC;",
+    "id": "policies-expiring-soonest"
+  },
+  {
+    "question": "For each claim, how many claim events occurred and what was their total event cost?",
+    "query": "SELECT\n c.claim_number,\n c.status AS claim_status,\n COUNT(ce.claim_event_id) AS event_count,\n COALESCE(SUM(ce.cost_usd), 0) AS total_event_cost\nFROM claims AS c\nLEFT JOIN claim_events AS ce ON c.claim_id = ce.claim_id\nGROUP BY c.claim_number, c.status\nORDER BY total_event_cost DESC, event_count DESC, c.claim_number;",
+    "id": "claim-event-count-and-cost"
+  },
+  {
+    "question": "Which adjusters are closest to or over their maximum active-claim capacity?",
+    "query": "WITH OpenClaimWorkload AS (\n SELECT\n c.adjuster_id,\n COUNT(*) AS open_claim_count\n FROM claims AS c\n WHERE c.status NOT IN ('paid', 'denied')\n GROUP BY c.adjuster_id\n)\nSELECT\n CONCAT(a.first_name, ' ', a.last_name) AS adjuster_name,\n o.name AS home_office_name,\n a.max_active_claims,\n COALESCE(w.open_claim_count, 0) AS open_claim_count,\n COALESCE(w.open_claim_count, 0) - a.max_active_claims AS capacity_difference\nFROM adjusters AS a\nLEFT JOIN OpenClaimWorkload AS w ON a.adjuster_id = w.adjuster_id\nLEFT JOIN offices AS o ON a.home_office_id = o.office_id\nORDER BY capacity_difference DESC, open_claim_count DESC, adjuster_name;",
+    "id": "adjuster-capacity-workload"
+  },
+  {
+    "question": "How many claims and how much estimated loss are associated with policyholders in each state?",
+    "query": "SELECT\n ph.state AS policyholder_state,\n COUNT(*) AS claim_count,\n SUM(c.estimated_loss) AS total_estimated_loss,\n AVG(c.estimated_loss) AS average_estimated_loss\nFROM claims AS c\nINNER JOIN policyholders AS ph ON c.policyholder_id = ph.policyholder_id\nGROUP BY ph.state\nORDER BY total_estimated_loss DESC, policyholder_state;",
+    "id": "claim-loss-by-policyholder-state"
+  },
+  {
+    "question": "Which claim types have an average estimated loss above the overall average claim estimated loss?",
+    "query": "SELECT\n c.claim_type,\n COUNT(*) AS claim_count,\n AVG(c.estimated_loss) AS average_estimated_loss\nFROM claims AS c\nGROUP BY c.claim_type\nHAVING AVG(c.estimated_loss) > (\n SELECT AVG(estimated_loss)\n FROM claims\n)\nORDER BY average_estimated_loss DESC;",
+    "id": "claim-types-above-average-loss"
+  },
+  {
+    "question": "Which claim events are still incomplete, with their related claim and assigned adjuster?",
+    "query": "SELECT\n ce.event_number,\n c.claim_number,\n CONCAT(a.first_name, ' ', a.last_name) AS adjuster_name,\n ce.event_type,\n ce.status AS event_status,\n ce.created_at,\n ce.cost_usd\nFROM claim_events AS ce\nINNER JOIN claims AS c ON ce.claim_id = c.claim_id\nLEFT JOIN adjusters AS a ON ce.adjuster_id = a.adjuster_id\nWHERE ce.completed_at IS NULL\nORDER BY ce.created_at ASC;",
+    "id": "incomplete-claim-events"
+  }
+]

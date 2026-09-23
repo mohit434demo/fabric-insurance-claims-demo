@@ -1,0 +1,114 @@
+table claims
+	lineageTag: 72f0d8bd-5827-4349-9571-8749681f0a6f
+
+	column claim_id
+		dataType: string
+		lineageTag: 6110ee7d-3122-4551-add9-d7d0b911d752
+		summarizeBy: none
+		sourceColumn: claim_id
+
+	column claim_number
+		dataType: string
+		lineageTag: d6c74af5-6c89-4b72-8b70-8bd93e8e8f88
+		summarizeBy: none
+		sourceColumn: claim_number
+
+	column policy_id
+		dataType: string
+		lineageTag: 5b45f5cb-ac15-4a04-88ba-ce3f3aae6c33
+		summarizeBy: none
+		sourceColumn: policy_id
+
+	column policyholder_id
+		dataType: string
+		lineageTag: 0f7f463f-5565-4016-a910-a2c1db759bb9
+		summarizeBy: none
+		sourceColumn: policyholder_id
+
+	column asset_id
+		dataType: string
+		lineageTag: d968e72c-7ddb-4f20-bca4-e68605658655
+		summarizeBy: none
+		sourceColumn: asset_id
+
+	column adjuster_id
+		dataType: string
+		lineageTag: 63d00936-1ab9-413e-bf46-66a18f97f3d8
+		summarizeBy: none
+		sourceColumn: adjuster_id
+
+	column office_id
+		dataType: string
+		lineageTag: 29bc4862-5118-42a3-a96e-38cc09ac207d
+		summarizeBy: none
+		sourceColumn: office_id
+
+	column claim_type
+		dataType: string
+		lineageTag: 9349f1d1-fff4-478f-adc8-1c56b8c41c01
+		summarizeBy: none
+		sourceColumn: claim_type
+
+	column description
+		dataType: string
+		lineageTag: 003fb9ee-e9a7-40c4-99bd-da18f664ee47
+		summarizeBy: none
+		sourceColumn: description
+
+	column incident_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 297d62a6-7d4f-4897-a7d3-6cb8865b97e9
+		summarizeBy: none
+		sourceColumn: incident_date
+
+	column filed_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: ddc1a093-7743-4980-9ea5-84acd722b6ad
+		summarizeBy: none
+		sourceColumn: filed_date
+
+	column status
+		dataType: string
+		lineageTag: f1ec1ff8-27be-4e4e-aaf1-19c83d936eb9
+		summarizeBy: none
+		sourceColumn: status
+
+	column estimated_loss
+		dataType: double
+		lineageTag: bd519380-38c7-4a45-9cc6-670f4542bb72
+		summarizeBy: sum
+		sourceColumn: estimated_loss
+
+	column approved_amount
+		dataType: double
+		lineageTag: 61d90e6e-283b-4f9f-a23e-2532907de293
+		summarizeBy: sum
+		sourceColumn: approved_amount
+
+	column priority
+		dataType: string
+		lineageTag: 9c79eb3f-2a11-431c-b42c-ccbeb6b907bf
+		summarizeBy: none
+		sourceColumn: priority
+
+	column incident_latitude
+		dataType: double
+		lineageTag: afc69f4e-b8cc-40a6-90a0-d128b97756af
+		summarizeBy: none
+		sourceColumn: incident_latitude
+
+	column incident_longitude
+		dataType: double
+		lineageTag: 10fd9880-d54b-4516-8958-74443a5ddda0
+		summarizeBy: none
+		sourceColumn: incident_longitude
+
+	partition claims = entity
+		mode: directLake
+		source
+			entityName: claims
+			schemaName: dbo
+			expressionSource: DatabaseQuery
+

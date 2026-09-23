@@ -1,0 +1,72 @@
+table asset_inspections
+	lineageTag: 7bb0e281-441f-48ff-968a-d09f625bd0ea
+
+	column inspection_id
+		dataType: string
+		lineageTag: 0d2e7db3-ad46-4624-8af2-5fcc903835ac
+		summarizeBy: none
+		sourceColumn: inspection_id
+
+	column asset_id
+		dataType: string
+		lineageTag: dd1c4d4f-5add-4378-a069-928d68efafb8
+		summarizeBy: none
+		sourceColumn: asset_id
+
+	column office_id
+		dataType: string
+		lineageTag: 1dc6eec1-c566-4310-8a00-bcbb22506807
+		summarizeBy: none
+		sourceColumn: office_id
+
+	column inspection_type
+		dataType: string
+		lineageTag: dd697de0-42c4-4bb3-9a99-adc0303d62ff
+		summarizeBy: none
+		sourceColumn: inspection_type
+
+	column status
+		dataType: string
+		lineageTag: 29282da3-e598-46c4-a12f-1d6ba0329afe
+		summarizeBy: none
+		sourceColumn: status
+
+	column scheduled_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 5663ea92-d4b7-401c-964b-a882347eab44
+		summarizeBy: none
+		sourceColumn: scheduled_date
+
+	column completed_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: c0f232c8-a07f-4835-ab29-55a90ea878f6
+		summarizeBy: none
+		sourceColumn: completed_date
+
+	column appraised_value
+		dataType: double
+		lineageTag: e0a10538-2132-41cc-802a-eab6f4ecf333
+		summarizeBy: sum
+		sourceColumn: appraised_value
+
+	column inspector_notes
+		dataType: string
+		lineageTag: a9654ca9-1b13-458f-83ad-097b4c66d65b
+		summarizeBy: none
+		sourceColumn: inspector_notes
+
+	column condition_rating
+		dataType: string
+		lineageTag: 1a5be5c6-1dcf-48c0-b82b-e427793f06c0
+		summarizeBy: none
+		sourceColumn: condition_rating
+
+	partition asset_inspections = entity
+		mode: directLake
+		source
+			entityName: asset_inspections
+			schemaName: dbo
+			expressionSource: DatabaseQuery
+

@@ -1,0 +1,47 @@
+relationship f6e98c1e-9a8b-407d-b423-d3138a7cff3f
+	fromColumn: asset_inspections.asset_id
+	toColumn: insured_assets.asset_id
+
+relationship d145f01b-7f2b-43da-b47f-0fa68d30a656
+	fromColumn: asset_inspections.office_id
+	toColumn: offices.office_id
+
+relationship 3c48ce71-2149-4e91-bd4b-dd50b0f26ad5
+	fromColumn: claim_events.claim_id
+	toColumn: claims.claim_id
+
+relationship c3f40ee4-9a52-45d3-aea6-2d49a88dcdf0
+	isActive: false
+	fromColumn: claim_events.adjuster_id
+	toColumn: adjusters.adjuster_id
+
+relationship bce7d9da-59de-4153-85cc-5b811028a8ff
+	fromColumn: claims.policy_id
+	toColumn: policies.policy_id
+
+relationship 8569a68e-cbe1-439a-8ffd-93f901c5a8d8
+	fromColumn: claims.asset_id
+	toColumn: insured_assets.asset_id
+
+relationship c2229d2c-5465-472c-81a6-58a6c817d7d9
+	fromColumn: claims.policyholder_id
+	toColumn: policyholders.policyholder_id
+
+relationship 101b71bc-d423-4fd0-a974-45bf20eec716
+	fromColumn: claims.office_id
+	toColumn: offices.office_id
+
+relationship ff7e1db5-ac15-4da0-a030-4437bb571bbe
+	fromColumn: claims.adjuster_id
+	toColumn: adjusters.adjuster_id
+
+relationship 77ac0d2e-ff2d-4b6d-b41f-8d47ee5d2196
+	isActive: false
+	fromColumn: policies.asset_id
+	toColumn: insured_assets.asset_id
+
+relationship 2edf40ee-fd93-4c18-b7ee-e038a598d0ad
+	isActive: false
+	fromColumn: policies.policyholder_id
+	toColumn: policyholders.policyholder_id
+

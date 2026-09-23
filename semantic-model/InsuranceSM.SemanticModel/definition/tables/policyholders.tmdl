@@ -1,0 +1,83 @@
+table policyholders
+	lineageTag: a8e3804e-112c-4a99-af9d-5ac8c48fdc0e
+
+	column policyholder_id
+		dataType: string
+		lineageTag: 2f4dbdc0-c05b-43be-a709-ef683c0cc2a2
+		summarizeBy: none
+		sourceColumn: policyholder_id
+
+	column policyholder_number
+		dataType: string
+		lineageTag: 656bf380-7013-485a-870c-a4f75c2f3953
+		summarizeBy: none
+		sourceColumn: policyholder_number
+
+	column full_name
+		dataType: string
+		lineageTag: 6b86396a-29ee-4f0f-9d72-95e9a02eb07d
+		summarizeBy: none
+		sourceColumn: full_name
+
+	column policyholder_type
+		dataType: string
+		lineageTag: 910af08e-db33-4a06-9d35-9ad60abb32ab
+		summarizeBy: none
+		sourceColumn: policyholder_type
+
+	column email
+		dataType: string
+		lineageTag: 4db12b03-1431-48b0-827d-fa89af6b2a8c
+		summarizeBy: none
+		sourceColumn: email
+
+	column phone
+		dataType: string
+		lineageTag: 3b61f662-df0a-4171-8415-f94584633794
+		summarizeBy: none
+		sourceColumn: phone
+
+	column address
+		dataType: string
+		lineageTag: f0501bc2-06f7-445c-90a8-573bfc00da2c
+		summarizeBy: none
+		sourceColumn: address
+
+	column city
+		dataType: string
+		lineageTag: 854f0edd-83ea-401a-81ba-fcd9c45518de
+		summarizeBy: none
+		sourceColumn: city
+
+	column state
+		dataType: string
+		lineageTag: c0ae732d-bf15-496d-9a3c-76310ec63630
+		summarizeBy: none
+		sourceColumn: state
+
+	column zip_code
+		dataType: int64
+		lineageTag: 8cbeac37-97bc-4400-a99c-516ea3dc0056
+		summarizeBy: sum
+		sourceColumn: zip_code
+
+	column date_of_birth
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: cfdeb332-96a5-4d6d-ae5f-d88ea1ac4975
+		summarizeBy: none
+		sourceColumn: date_of_birth
+
+	column risk_score
+		dataType: int64
+		lineageTag: 16d741b6-019d-4a55-bf6c-9ad6b3f9c1b5
+		summarizeBy: sum
+		sourceColumn: risk_score
+
+	partition policyholders = entity
+		mode: directLake
+		source
+			entityName: policyholders
+			schemaName: dbo
+			expressionSource: DatabaseQuery
+

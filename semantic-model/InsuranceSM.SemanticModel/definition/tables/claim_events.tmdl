@@ -1,0 +1,78 @@
+table claim_events
+	lineageTag: d6bd8351-aac1-428f-8bf1-e66c83a26b93
+
+	column claim_event_id
+		dataType: string
+		lineageTag: 1dbc05ff-ad36-48cd-9558-e725969c78f4
+		summarizeBy: none
+		sourceColumn: claim_event_id
+
+	column event_number
+		dataType: string
+		lineageTag: 9dd4d1ff-9599-4089-acec-7b96b2f36c2b
+		summarizeBy: none
+		sourceColumn: event_number
+
+	column claim_id
+		dataType: string
+		lineageTag: 3d445717-f3a2-4a03-8209-305a569df713
+		summarizeBy: none
+		sourceColumn: claim_id
+
+	column adjuster_id
+		dataType: string
+		lineageTag: 458ea3b5-84e3-4547-9d8a-4be31cc42426
+		summarizeBy: none
+		sourceColumn: adjuster_id
+
+	column event_type
+		dataType: string
+		lineageTag: 1e4aea31-f17f-4a1c-9f4c-6097f9ea4a03
+		summarizeBy: none
+		sourceColumn: event_type
+
+	column description
+		dataType: string
+		lineageTag: d1e1471e-8a14-4d29-aa77-c1c48b021eb3
+		summarizeBy: none
+		sourceColumn: description
+
+	column status
+		dataType: string
+		lineageTag: 61044a05-b5eb-4d59-a297-0a836af11eb0
+		summarizeBy: none
+		sourceColumn: status
+
+	column created_at
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 553de26f-27b7-481f-b791-db30462e92b2
+		summarizeBy: none
+		sourceColumn: created_at
+
+	column completed_at
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 5ac26dc4-349b-4989-bd7c-eb42da39abf2
+		summarizeBy: none
+		sourceColumn: completed_at
+
+	column notes
+		dataType: string
+		lineageTag: 6afa9ced-0cfe-4946-ac49-f326a903bae7
+		summarizeBy: none
+		sourceColumn: notes
+
+	column cost_usd
+		dataType: double
+		lineageTag: 6d79a4bd-8538-4c0f-bb00-ae95104c9263
+		summarizeBy: sum
+		sourceColumn: cost_usd
+
+	partition claim_events = entity
+		mode: directLake
+		source
+			entityName: claim_events
+			schemaName: dbo
+			expressionSource: DatabaseQuery
+

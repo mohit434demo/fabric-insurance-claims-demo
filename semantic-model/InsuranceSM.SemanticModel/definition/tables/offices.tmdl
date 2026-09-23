@@ -1,0 +1,88 @@
+table offices
+	lineageTag: b3b2ace1-e112-4c9e-b5fd-0370863806ed
+
+	column office_id
+		dataType: string
+		lineageTag: 1889bac1-f07f-465a-a128-12e5492bd45e
+		summarizeBy: none
+		sourceColumn: office_id
+
+	column name
+		dataType: string
+		lineageTag: c1a69ae0-b369-46ce-97b6-74cf82f88b3d
+		summarizeBy: none
+		sourceColumn: name
+
+	column office_type
+		dataType: string
+		lineageTag: 7634fc0c-f913-4391-8593-31b6214a82b0
+		summarizeBy: none
+		sourceColumn: office_type
+
+	column address
+		dataType: string
+		lineageTag: 271385ef-c177-4da1-ae6e-1e4168264b32
+		summarizeBy: none
+		sourceColumn: address
+
+	column city
+		dataType: string
+		lineageTag: c16f7eb1-2e13-496a-b0cf-e14cef1c671b
+		summarizeBy: none
+		sourceColumn: city
+
+	column state
+		dataType: string
+		lineageTag: 88ffe038-31b3-4e60-8645-1912d33f0bb1
+		summarizeBy: none
+		sourceColumn: state
+
+	column zip_code
+		dataType: int64
+		lineageTag: 06ef6ec3-b89c-4f92-b39c-187546c20e94
+		summarizeBy: sum
+		sourceColumn: zip_code
+
+	column latitude
+		dataType: double
+		lineageTag: 56e3f415-beed-4d31-87c7-e0a15d31ea26
+		summarizeBy: none
+		sourceColumn: latitude
+
+	column longitude
+		dataType: double
+		lineageTag: dcbb2466-83c8-4f91-bf94-fbc32feb3f69
+		summarizeBy: none
+		sourceColumn: longitude
+
+	column timezone
+		dataType: string
+		lineageTag: 0c16546c-f0b5-4997-8821-6989d400ade7
+		summarizeBy: none
+		sourceColumn: timezone
+
+	column phone
+		dataType: string
+		lineageTag: 47b2eb2b-acb3-4a47-b83a-4b6446b64189
+		summarizeBy: none
+		sourceColumn: phone
+
+	column adjuster_capacity
+		dataType: int64
+		lineageTag: dbb47495-33cf-40ce-89d1-23bac41a3472
+		summarizeBy: sum
+		sourceColumn: adjuster_capacity
+
+	column has_siu_unit
+		dataType: boolean
+		lineageTag: b59fde20-071f-4a57-919e-c7bc24e2d04b
+		summarizeBy: none
+		sourceColumn: has_siu_unit
+
+	partition offices = entity
+		mode: directLake
+		source
+			entityName: offices
+			schemaName: dbo
+			expressionSource: DatabaseQuery
+

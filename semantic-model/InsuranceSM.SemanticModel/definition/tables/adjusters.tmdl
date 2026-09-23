@@ -1,0 +1,95 @@
+table adjusters
+	lineageTag: dc5ead25-6089-4dc7-95ae-489262f807a2
+
+	column adjuster_id
+		dataType: string
+		lineageTag: c34db97c-fb8f-4b6b-ae37-0b9c7999c978
+		summarizeBy: none
+		sourceColumn: adjuster_id
+
+	column employee_id
+		dataType: string
+		lineageTag: 405c3a7b-27db-42d6-bdbb-bdd4f452be9f
+		summarizeBy: none
+		sourceColumn: employee_id
+
+	column first_name
+		dataType: string
+		lineageTag: b72950cb-0a20-46b9-bdba-d5992c1f8042
+		summarizeBy: none
+		sourceColumn: first_name
+
+	column last_name
+		dataType: string
+		lineageTag: 85410b16-7750-4ed8-b8b4-4b4f6c6df369
+		summarizeBy: none
+		sourceColumn: last_name
+
+	column email
+		dataType: string
+		lineageTag: c5b99b85-d263-4a45-bc1d-4b0d933c79d0
+		summarizeBy: none
+		sourceColumn: email
+
+	column phone
+		dataType: string
+		lineageTag: dae5ed86-41bf-4204-8e41-b5d4279a862e
+		summarizeBy: none
+		sourceColumn: phone
+
+	column license_number
+		dataType: string
+		lineageTag: 5d560401-6902-401c-b260-db1ec99c78a8
+		summarizeBy: none
+		sourceColumn: license_number
+
+	column license_state
+		dataType: string
+		lineageTag: a92e6168-aef1-4847-ad1b-ab349ca84444
+		summarizeBy: none
+		sourceColumn: license_state
+
+	column specializations
+		dataType: string
+		lineageTag: f1d46b82-645f-4d64-b425-e0a2ea3c167d
+		summarizeBy: none
+		sourceColumn: specializations
+
+	column hire_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: abf4f7fe-3c83-435a-adc9-118856fa9918
+		summarizeBy: none
+		sourceColumn: hire_date
+
+	column status
+		dataType: string
+		lineageTag: 50b3a1d5-a354-480a-9997-c4595a25b7fc
+		summarizeBy: none
+		sourceColumn: status
+
+	column home_office_id
+		dataType: string
+		lineageTag: 029677ab-a532-4772-b6cf-9faea722d944
+		summarizeBy: none
+		sourceColumn: home_office_id
+
+	column supervisor_email
+		dataType: string
+		lineageTag: 18cb3824-1c69-46f0-abbf-f70d42998a6c
+		summarizeBy: none
+		sourceColumn: supervisor_email
+
+	column max_active_claims
+		dataType: int64
+		lineageTag: 36178c0e-c4fc-4366-918f-333a7b0e256b
+		summarizeBy: sum
+		sourceColumn: max_active_claims
+
+	partition adjusters = entity
+		mode: directLake
+		source
+			entityName: adjusters
+			schemaName: dbo
+			expressionSource: DatabaseQuery
+
